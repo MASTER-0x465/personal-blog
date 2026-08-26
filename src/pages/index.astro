@@ -1,0 +1,39 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+const recent = posts.slice(0, 3);
+---
+
+<Layout title="首页" description="一个后端程序员的个人博客">
+  <section class="hero">
+    <h1>你好，欢迎来到我的博客</h1>
+    <p>记录我在后端开发中的思考、踩坑和经验分享。</p>
+  </section>
+
+  <section>
+    <h2>最新文章</h2>
+    {recent.length > 0 ? (
+      <ul class="post-list">
+        {recent.map((post) => (
+          <li class="post-card">
+            <a href={`/blog/${post.id}/`}>
+              <h3>{post.data.title}</h3>
+            </a>
+            <p class="post-meta">
+              {post.data.pubDate.toLocaleDateString('zh-CN')}
+              {post.data.tags.length > 0 && ` · ${post.data.tags.join(' / ')}`}
+            </p>
+            <p class="post-excerpt">{post.data.description}</p>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p>还没有文章，等作者发布第一篇吧。</p>
+    )}
+    <p><a href="/blog">查看全部文章 →</a></p>
+  </section>
+</Layout>
