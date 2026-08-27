@@ -60,10 +60,35 @@ npm run build
 2. 按提示在域名服务商处添加 CNAME 记录，指向 `xxx.pages.dev`。
 3. HTTPS 证书由 Cloudflare 自动签发，无需自己配置。
 
-## 后续可以加的功能
+## 已实现的功能
 
-- RSS 订阅（`@astrojs/rss`）
-- 标签页与按标签筛选
-- 站内搜索（Pagefind）
-- 评论（Giscus）
-- 访问统计（Umami / Plausible）
+- RSS 订阅：`/rss.xml`
+- 标签页与按标签筛选：`/tags`
+- 站内搜索：`/search`（内置轻量搜索，无需额外依赖）
+- 评论（Giscus）：文章页底部，评论存储在 GitHub Discussions
+- 访问统计：推荐使用 Cloudflare Web Analytics（后台一键开启，无需改代码）
+
+### Giscus 评论启用步骤
+
+1. GitHub 仓库 → Settings → Features → 打开 **Discussions**
+2. 打开 [giscus.app](https://giscus.app)，选择该仓库，生成配置
+3. 把 `src/components/Giscus.astro` 里的 `REPO_ID` 和 `CATEGORY` 替换成生成的值
+4. 推送到 main 分支即可生效
+
+### 访问统计启用步骤
+
+1. Cloudflare 后台 → Analytics & Logs → **Web Analytics**
+2. **Add a site** → 选择 masterwn.com（站点已在 Cloudflare 上，自动接入，无需改代码）
+
+### 写文章模板
+
+```markdown
+---
+title: 文章标题
+description: 一句话摘要（会显示在文章卡片上）
+pubDate: 2026-08-27
+tags: ["后端", "数据库"]
+---
+
+正文内容，支持 Markdown。
+```

@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import PostCard from '../../components/PostCard.astro';
 import { getCollection } from 'astro:content';
 
 const posts = (await getCollection('blog')).sort(
@@ -11,18 +12,7 @@ const posts = (await getCollection('blog')).sort(
   <h1>全部文章</h1>
   {posts.length > 0 ? (
     <ul class="post-list">
-      {posts.map((post) => (
-        <li class="post-card">
-          <a href={`/blog/${post.id}/`}>
-            <h2>{post.data.title}</h2>
-          </a>
-          <p class="post-meta">
-            {post.data.pubDate.toLocaleDateString('zh-CN')}
-            {post.data.tags.length > 0 && ` · ${post.data.tags.join(' / ')}`}
-          </p>
-          <p class="post-excerpt">{post.data.description}</p>
-        </li>
-      ))}
+      {posts.map((post) => <PostCard post={post} headingLevel={2} />)}
     </ul>
   ) : (
     <p>还没有文章。</p>

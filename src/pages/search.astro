@@ -1,0 +1,50 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="搜索" description="站内搜索">
+  <h1>搜索</h1>
+  <input id="search-input" type="search" placeholder="输入关键词，例如：测试、数据库…" autocomplete="off" />
+  <ul id="search-results" class="post-list"></ul>
+
+  <script>
+    let posts = [];
+    fetch('/search-index.json')
+      .then((res) => res.json())
+      .then((data) => { posts = data; })
+      .catch(() => {});
+
+    const input = document.getElementById('search-input');
+    const results = document.getElementById('search-results');
+
+    function render() {
+      const q = input.value.trim().toLowerCase();
+      results.innerHTML = '';
+      if (!q) return;
+      const hits = posts.filter((p) =>
+        [p.title, p.description, p.tags.join(' ')].join(' ').toLowerCase().includes(q)
+      );
+      if (hits.length === 0) {
+        const li = document.createElement('li');
+        li.textContent = '没有找到相关文章。';
+        results.appendChild(li);
+        return;
+      }
+      for (const p of hits) {
+        const li = document.createElement('li');
+        li.className = 'post-card';
+        const tags = p.tags
+          .map((t) => `<a class="tag-link" href="/tags/${t}/">${t}</a>`)
+          .join(' / ');
+        li.innerHTML = `
+          <a href="/blog/${p.slug}/"><h3>${p.title}</h3></a>
+          <p class="post-meta">${p.date}${p.tags.length ? ' · ' + tags : ''}</p>
+          ${p.description ? `<p class="post-excerpt">${p.description}</p>` : ''}
+        `;
+        results.appendChild(li);
+      }
+    }
+
+    input.addEventListener('input', render);
+  </script>
+</Layout>

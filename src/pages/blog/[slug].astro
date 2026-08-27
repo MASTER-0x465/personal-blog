@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import Giscus from '../../components/Giscus.astro';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -20,11 +21,15 @@ const { Content } = await render(post);
       <h1>{post.data.title}</h1>
       <p class="post-meta">
         {post.data.pubDate.toLocaleDateString('zh-CN')}
-        {post.data.tags.length > 0 && ` · ${post.data.tags.join(' / ')}`}
+        {post.data.tags.length > 0 && ' · '}
+        {post.data.tags.map((tag, i) => (
+          <>{i > 0 && ' / '}<a class="tag-link" href={`/tags/${tag}/`}>{tag}</a></>
+        ))}
       </p>
     </header>
     <div class="post-content">
       <Content />
     </div>
   </article>
+  <Giscus />
 </Layout>

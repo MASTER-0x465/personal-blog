@@ -1,0 +1,25 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+  headingLevel?: 2 | 3;
+}
+
+const { post, headingLevel = 3 } = Astro.props;
+const Tag = `h${headingLevel}` as 'h2' | 'h3';
+---
+
+<li class="post-card">
+  <a href={`/blog/${post.id}/`}>
+    <Tag>{post.data.title}</Tag>
+  </a>
+  <p class="post-meta">
+    {post.data.pubDate.toLocaleDateString('zh-CN')}
+    {post.data.tags.length > 0 && ' · '}
+    {post.data.tags.map((tag, i) => (
+      <>{i > 0 && ' / '}<a class="tag-link" href={`/tags/${tag}/`}>{tag}</a></>
+    ))}
+  </p>
+  {post.data.description && <p class="post-excerpt">{post.data.description}</p>}
+</li>
