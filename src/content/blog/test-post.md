@@ -1,6 +1,6 @@
 ---
-title: 测试文章
-description: 用于验证部署流程的测试文章
+title: 方方点这个
+description: 测试提交功能
 pubDate: 2026-08-27
 tags: ["测试"]
 ---
